@@ -1,19 +1,33 @@
 module Data.Random.XorShift where
 
-import Prelude
+import Data.Int (toNumber)
 import Data.Int.Bits ((.^.), shl, shr)
 import Data.Random (class RandomGen)
-import Data.Tuple
-import Data.Int (toNumber)
+import Data.Tuple (Tuple(..))
+import Prelude (class Show, top, (+), (/))
+import Data.Generic.Rep
+import Data.Generic.Rep.Show (genericShow)
 
 newtype XorShiftGen = XSG Int
 
+derive instance genericRandomGen :: Generic XorShiftGen _
+
+instance showRandomGen :: Show XorShiftGen where
+    show = genericShow
+
+nextInt :: Int -> Tuple Int XorShiftGen
+nextInt s = let x = s .^. (s `shl` 13)
+                y = x .^. (x `shr` 17)
+                z = (y .^. (y `shl` 5))
+            in Tuple z (XSG z)
+
+instance xorShiftIntGen :: RandomGen Int XorShiftGen where
+    next (XSG s) = nextInt s
+
 instance xorShiftGen :: RandomGen Number XorShiftGen where
     next (XSG s) 
-        = let x = s .^. (s `shl` 13)
-              y = x .^. (x `shr` 17)
-              z = (y .^. (y `shl` 5))
-          in Tuple (toNumber z) (XSG z)
-
-instance showXorShiftGen :: Show XorShiftGen where
-    show (XSG s) = show s 
+        =   let (Tuple z g) = nextInt s
+                r = toNumber z
+                t = toNumber (top :: Int)
+                n = r / 2.0 / t + 0.5
+            in Tuple n g

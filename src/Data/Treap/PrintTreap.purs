@@ -10,20 +10,25 @@ import Data.String.CodeUnits (fromCharArray)
 class Print a c where
     print :: a -> c -> String
 
-instance printTreap :: (Show s, Show k) => Print (Treap s k) (Tuple Int String) where
+printRoot :: forall x. Print x (Tuple Int String) => x -> String
+printRoot x = print x (Tuple 0 "")
+
+instance printTreap :: (Show s, Show v) => Print (Treap s v) (Tuple Int String) where
     print (Empty) c = ""
-    print (TreapNode { left: left, right: right, key: k, priority: p, size: sz, sum: s }) c = 
+    print (TNode { left: left, right: right, value: v, priority: p, sum: s }) c = 
         let 
             indent = fromCharArray $ replicate (fst c) ' '
             l = (fst c) + 1
         in indent 
             <> snd c <> " "
-            <> show k <> " "
-            <> show (p / 4248525000.0 + 0.5) <> " "
-            <> show sz <> " "
+            <> show v <> " "
+            <> show p <> " "
             <> show s <> "\n"
-            <> print left (Tuple l "[L]") 
-            <> print right (Tuple l "[R]")
+            <> print left (Tuple l "🠘") 
+            <> print right (Tuple l "🠚")
 
 printR :: forall g s k. Show s => Show k => RTreap g s k -> String
-printR (RT _ n) = print n (Tuple 0 "[*]")
+printR (RTreap _ n) = print n (Tuple 0 "[*]")
+
+printT :: forall s v. Show s => Show v => Treap s v -> String
+printT t = print t (Tuple 0 "[*]")

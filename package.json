@@ -1,0 +1,30 @@
+{
+  "name": "puregrid",
+  "version": "1.0.0",
+  "description": "Canvas DataGrid written in Purescript",
+  "main": "dist/app.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "purescript": "^0.13.5",
+    "purescript-psa": "^0.7.3",
+    "purs-loader": "^3.6.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "webpack": "webpack --progress --bail"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ReactivePivot/puregrid.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ReactivePivot/puregrid/issues"
+  },
+  "homepage": "https://github.com/ReactivePivot/puregrid#readme"
+}
