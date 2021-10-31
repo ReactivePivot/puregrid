@@ -40,14 +40,14 @@ widthOf (AxSize w _) = w
 
 isSorted :: forall a. Ord a => List a -> Boolean
 isSorted Nil = true
-isSorted (a:Nil) = true
+isSorted (_:Nil) = true
 isSorted (x:y:xs) = x <= y && isSorted (y:xs)
 
 mkTestTreap :: Int -> List (Tuple String Number) -> AxisTreap String
 mkTestTreap seed pairs = mkFromList seed $ uncurry axJs <$> pairs
 
 uniqueKeys :: List (Tuple String Number) -> List (Tuple String Number)
-uniqueKeys = nubBy $ fst >>> flip ((==) <<< fst)
+uniqueKeys = nubBy $ fst >>> flip ((compare) <<< fst)
 
 keyList :: AxisTreap String -> List String
 keyList t =  (\(AxEntry k _) -> k) <$> fromFoldable t
@@ -66,4 +66,4 @@ instance arbitraryTreapTestData :: Arbitrary TreapTestData where
         fromTestInit (Tuple n l) = TD sorted (mkTestTreap n pairs)
             where
             pairs = uniqueKeys $ convertStrings l :: List (Tuple String Number)
-            sorted = nubBy (==) (sort pairs)
+            sorted = nubBy compare (sort pairs)

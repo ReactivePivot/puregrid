@@ -5,8 +5,8 @@ import Data.Int.Bits ((.^.), shl, shr)
 import Data.Random (class RandomGen)
 import Data.Tuple (Tuple(..))
 import Prelude (class Show, top, (+), (/))
-import Data.Generic.Rep
-import Data.Generic.Rep.Show (genericShow)
+import Data.Generic.Rep (class Generic)
+import Data.Show.Generic (genericShow)
 
 newtype XorShiftGen = XSG Int
 

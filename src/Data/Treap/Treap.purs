@@ -14,7 +14,7 @@ import Prelude
 
 import Data.Foldable (class Foldable, foldlDefault, foldrDefault)
 import Data.Generic.Rep (class Generic)
-import Data.Generic.Rep.Show (genericShow)
+import Data.Show.Generic (genericShow)
 import Data.List (List(..), foldMap, head, singleton)
 import Data.Maybe (Maybe(..))
 import Data.Monoid.Additive (Additive(..))

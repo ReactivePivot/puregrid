@@ -3,7 +3,7 @@ module Grid.Axis where
 import Prelude
 
 import Data.Generic.Rep (class Generic)
-import Data.Generic.Rep.Show (genericShow)
+import Data.Show.Generic (genericShow)
 import Data.Monoid.Additive (Additive(..))
 import Data.Random.XorShift (XorShiftGen(..))
 import Data.Treap (Treap(..))
