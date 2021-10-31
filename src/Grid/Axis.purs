@@ -35,12 +35,15 @@ instance axisEntryKeyed :: Ord k => Keyed (AxisEntry k) k where
   key (AxEntry k _) = k
 
 instance axisSized :: Sized (AxisEntry k) AxisSize where
-  sizeof (AxEntry _ s) = s
+  sizeOf (AxEntry _ s) = s
 
 instance axisSizeCount :: Countable AxisSize where
   count (AxSize _ c) = Additive c
 
 type AxisTreap k = RTreap XorShiftGen AxisSize (AxisEntry k)
+
+getExtent :: AxisSize -> Number
+getExtent (AxSize w _) = w
 
 mkAxisTreap :: forall k. Int -> AxisTreap k
 mkAxisTreap n = RTreap (XSG n) Empty

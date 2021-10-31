@@ -15,6 +15,7 @@ to generate this file without the comments in this block.
   [ "aff"
   , "arrays"
   , "bifunctors"
+  , "canvas"
   , "console"
   , "effect"
   , "either"
@@ -27,6 +28,7 @@ to generate this file without the comments in this block.
   , "node-fs-aff"
   , "nonempty"
   , "numbers"
+  , "partial"
   , "prelude"
   , "psci-support"
   , "quickcheck"
@@ -34,6 +36,7 @@ to generate this file without the comments in this block.
   , "strings"
   , "tuples"
   , "unfoldable"
+  , "unordered-collections"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

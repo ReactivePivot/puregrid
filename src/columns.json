@@ -1,0 +1,14 @@
+[
+    { "key": "A", "extent": 70.0 },
+    { "key": "B", "extent": 100.0 },
+    { "key": "C", "extent": 120.0 },
+    { "key": "D", "extent": 80.0 },
+    { "key": "E", "extent": 60.0 },
+    { "key": "F", "extent": 40.0 },
+    { "key": "G", "extent": 70.0 },
+    { "key": "H", "extent": 100.0 },
+    { "key": "I", "extent": 120.0 },
+    { "key": "J", "extent": 80.0 },
+    { "key": "K", "extent": 60.0 },
+    { "key": "L", "extent": 40.0 }
+]

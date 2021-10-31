@@ -1,14 +1,13 @@
 [
-    { "key": "A", "width": 70.0 },
-    { "key": "B", "width": 100.0 },
-    { "key": "C", "width": 120.0 },
-    { "key": "D", "width": 80.0 },
-    { "key": "E", "width": 60.0 },
-    { "key": "F", "width": 40.0 },
-    { "key": "G", "width": 70.0 },
-    { "key": "H", "width": 100.0 },
-    { "key": "I", "width": 120.0 },
-    { "key": "J", "width": 80.0 },
-    { "key": "K", "width": 60.0 },
-    { "key": "L", "width": 40.0 }
+    { "row": "A", "column": "A", "value": "X" },
+    { "row": "A", "column": "B", "value": "X" },
+    { "row": "A", "column": "C", "value": "X" },
+    { "row": "A", "column": "D", "value": "X" },
+    { "row": "A", "column": "E", "value": "X" },
+    { "row": "A", "column": "F", "value": "X" },
+    { "row": "A", "column": "G", "value": "X" },
+    { "row": "A", "column": "H", "value": "X" },
+    { "row": "A", "column": "I", "value": "X" },
+    { "row": "A", "column": "J", "value": "X" },
+    { "row": "A", "column": "K", "value": "X" }
 ]
