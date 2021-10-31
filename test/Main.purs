@@ -5,13 +5,11 @@ import Prelude
 import Data.Array (filter, fromFoldable, (..))
 import Data.Foldable (all, foldMap, sum)
 import Data.List (length, mapWithIndex, slice)
-import Data.Treap (indexRange)
 import Data.Treap.Keyed (key)
 import Data.Treap.Random (rIndexRange, rItemAtIndex)
 import Data.Treap.Sized (sizeof)
 import Data.Tuple (Tuple(..), fst, snd, uncurry)
 import Effect (Effect)
-import Math (round)
 import Test.QuickCheck (Result, quickCheck, (<?>))
 import Test.Utils (TreapTestData(..), assertApproxEquals, checkEntry, isSorted, keyList, msg, passed, widthOf)
 
@@ -29,7 +27,6 @@ checkSize :: TreapTestData -> Result
 checkSize (TD sorted treap) =
   let treapSize = widthOf (sizeof treap)
       sumSets = sum (snd <$> sorted)
-      eq = round treapSize == round sumSets
   in assertApproxEquals treapSize sumSets
 
 checkItemAt :: TreapTestData -> Result
