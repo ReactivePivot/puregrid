@@ -17,7 +17,7 @@ import Data.Random (class RNG, nextNum)
 import Data.Treap (Treap, indexRange, itemAt, itemAtIndex, treapAdd, treapRange)
 import Data.Treap.Countable (class Countable, count)
 import Data.Treap.Keyed (class Keyed)
-import Data.Treap.Sized (class Sized, sizeof)
+import Data.Treap.Sized (class Sized, sizeOf)
 import Data.Tuple (fst, snd)
 import Prelude (class Functor, class Ord, class Show, map)
 
@@ -53,7 +53,7 @@ rIndexRange i j (RTreap g t) = indexRange i j t
 
 
 instance sizedRTreap :: Sized v s => Sized (RTreap g s v) s where
-    sizeof (RTreap g t) = sizeof t
+    sizeOf (RTreap g t) = sizeOf t
 
 instance foldable :: Foldable (RTreap g s) where
     foldr f b (RTreap g t) = foldr f b t

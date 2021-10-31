@@ -21,7 +21,7 @@ import Data.Monoid.Additive (Additive(..))
 import Data.Traversable (class Traversable, sequenceDefault, traverse)
 import Data.Treap.Countable (class Countable, count)
 import Data.Treap.Keyed (class Keyed, key)
-import Data.Treap.Sized (class Sized, sizeof)
+import Data.Treap.Sized (class Sized, sizeOf)
 
 type TreapRec s v = { left :: Treap s v
                     , value :: v
@@ -35,7 +35,7 @@ data Treap s v
     | Empty
 
 mkTreap :: forall s v. Sized v s => Number -> (Treap s v) -> v -> (Treap s v) -> Treap s v
-mkTreap p l v r = TNode { left: l, value: v, right: r, priority: p, sum: sizeof v }
+mkTreap p l v r = TNode { left: l, value: v, right: r, priority: p, sum: sizeOf v }
 
 mkTreap' ::  forall s v. Number -> s -> (Treap s v) -> v -> (Treap s v) -> Treap s v
 mkTreap' p s l v r = TNode { left: l, value: v, right: r, priority: p, sum: s }
@@ -43,7 +43,7 @@ mkTreap' p s l v r = TNode { left: l, value: v, right: r, priority: p, sum: s }
 
 leaf :: forall s v. Sized v s => v -> Number -> Treap s v
 leaf v p = TNode { left: Empty
-                , sum: sizeof v
+                , sum: sizeOf v
                 , value: v
                 , priority: p
                 , right: Empty 
@@ -78,33 +78,44 @@ addRight t@(TNode { right: TNode { priority: pri }, priority: p' }) =
     recalcSum $ if p' > pri then rotateLeft t else t
 addRight t = t
 
+data RangeMode = Inclusive | Exclusive
+derive instance rangeModeEq ∷ Eq RangeMode
+
 treapRange :: forall s k o. Sized k s => Ord o => Monoid o => 
     (s -> o) -> o -> o -> Treap s k -> List k
 treapRange = treapRange' mempty
 
+treapRangeMode :: forall s k o. Sized k s => Ord o => Monoid o => 
+    RangeMode -> (s -> o) -> o -> o -> Treap s k -> List k
+treapRangeMode r = treapRangeMode' r mempty
+
 treapRange' :: forall s k o. Sized k s => Ord o => Monoid o => 
     o -> (s -> o) -> o -> o -> Treap s k -> List k
-treapRange' _ _ _ _ Empty = Nil
-treapRange' start prop from to n@(TNode { left: l, value: v, right: r }) =
-    let node_start = prop (sizeof l) <> start  
-        node_end = node_start <> prop (sizeof v)
-        leftNodes = 
+treapRange' = treapRangeMode' Exclusive
+
+treapRangeMode' :: forall s k o. Sized k s => Ord o => Monoid o => 
+    RangeMode -> o -> (s -> o) -> o -> o -> Treap s k -> List k
+treapRangeMode' _ _ _ _ _ Empty = Nil
+treapRangeMode' mode start prop from to n@(TNode { left: l, value: v, right: r }) =
+    let node_start = prop (sizeOf l) <> start
+        node_end = node_start <> prop (sizeOf v)
+        leftNodes =
             if node_start >= from
-            then treapRange' start prop from to l 
+            then treapRangeMode' mode start prop from to l 
             else Nil
-        thisNode = 
-            if node_end > from && node_start <= to
+        thisNode =
+            if node_end > from && (node_start < to || mode == Inclusive && node_start <= to)
             then singleton v
             else Nil
-        rightNodes = 
+        rightNodes =
             if node_end <= to
-            then treapRange' node_end prop from to r
+            then treapRangeMode' mode node_end prop from to r
             else Nil
     in leftNodes <> thisNode <> rightNodes
 
 itemAt :: forall s k o. Sized k s => Ord o => Monoid o => 
     (s -> o) -> o -> Treap s k -> Maybe k
-itemAt f at = head <<< treapRange f at at
+itemAt f at = head <<< treapRangeMode Inclusive f at at
 
 itemAtIndex :: forall s k. Countable s => Sized k s => 
     Int -> Treap s k -> Maybe k
@@ -131,7 +142,7 @@ treapNodeSum (TNode n) = n.sum
 
 recalcSum :: forall v s. Sized v s => Treap s v -> Treap s v
 recalcSum Empty = Empty
-recalcSum t@(TNode n) = TNode n { sum = (sizeof t) }
+recalcSum t@(TNode n) = TNode n { sum = (sizeOf t) }
 
 derive instance genericTreap :: Generic (Treap s v) _
 
@@ -139,8 +150,8 @@ instance treapShow :: (Show s, Show v) => Show (Treap s v) where
     show x = genericShow x
 
 instance sizeTreap :: Sized v s => Sized (Treap s v) s where
-    sizeof Empty = mempty
-    sizeof (TNode n) = sizeof n.value <> treapNodeSum n.left <> treapNodeSum n.right
+    sizeOf Empty = mempty
+    sizeOf (TNode n) = sizeOf n.value <> treapNodeSum n.left <> treapNodeSum n.right
 
 instance treapFunctor :: Functor (Treap s) where 
     map f (TNode n@{ value: v, left: l, right: r }) 

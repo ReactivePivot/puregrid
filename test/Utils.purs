@@ -9,10 +9,11 @@ import Data.Number.Approximate ((~=))
 import Data.String (toLower)
 import Data.Tuple (Tuple(..), fst, uncurry)
 import Grid.Axis (AxisEntry(..), AxisSize(..), AxisTreap)
-import Main (AxisJson, mkFromList)
 import Test.AlphaNumString (AlphaNumString, str)
 import Test.QuickCheck (Result, arbitrary, (<?>))
 import Test.QuickCheck.Arbitrary (class Arbitrary)
+import Data.Treap.Print (printR)
+import Grid.Axis.Serialization (AxisJson, mkAxisFromList)
 
 data CheckResult a = EqCheck Boolean a a
 
@@ -35,16 +36,13 @@ checkEntry s Nothing = EqCheck false "<NOT FOUND>" s
 ce :: String -> Number -> AxisEntry String
 ce s e = AxEntry s (AxSize e 1)
 
-widthOf :: AxisSize -> Number
-widthOf (AxSize w _) = w
-
 isSorted :: forall a. Ord a => List a -> Boolean
 isSorted Nil = true
 isSorted (a:Nil) = true
 isSorted (x:y:xs) = x <= y && isSorted (y:xs)
 
 mkTestTreap :: Int -> List (Tuple String Number) -> AxisTreap String
-mkTestTreap seed pairs = mkFromList seed $ uncurry axJs <$> pairs
+mkTestTreap seed pairs = mkAxisFromList seed $ uncurry axJs <$> pairs
 
 uniqueKeys :: List (Tuple String Number) -> List (Tuple String Number)
 uniqueKeys = nubBy $ fst >>> flip ((==) <<< fst)
@@ -58,12 +56,16 @@ msg a = "Test failed for input: " <> show a
 assertApproxEquals :: Number -> Number -> Result
 assertApproxEquals a b = a ~= b <?> show a <> " !~= " <> show b  
 
+mkTreapTestData :: Int -> List (Tuple String Number) -> TreapTestData
+mkTreapTestData n pairs = TD sorted (mkTestTreap n pairs)
+    where sorted = nubBy (==) (sort pairs)
+
 data TreapTestData = TD (List (Tuple String Number)) (AxisTreap String)
+
+instance showTreapTestData :: Show (TreapTestData) where
+    show (TD _ t) = printR t 
 
 instance arbitraryTreapTestData :: Arbitrary TreapTestData where
     arbitrary = map fromTestInit arbitrary
         where
-        fromTestInit (Tuple n l) = TD sorted (mkTestTreap n pairs)
-            where
-            pairs = uniqueKeys $ convertStrings l :: List (Tuple String Number)
-            sorted = nubBy (==) (sort pairs)
+        fromTestInit (Tuple n l) = mkTreapTestData n (uniqueKeys $ convertStrings l)
