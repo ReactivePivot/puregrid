@@ -10,7 +10,6 @@ import Data.Treap.Random (rIndexRange, rItemAtIndex)
 import Data.Treap.Sized (sizeOf)
 import Data.Tuple (Tuple(..), fst, snd, uncurry)
 import Effect (Effect)
-import Math (round)
 import Test.QuickCheck (Result, quickCheck, (<?>))
 import Test.Utils (
   TreapTestData(..), 
@@ -39,7 +38,6 @@ checkSize :: TreapTestData -> Result
 checkSize (TD sorted treap) =
   let treapSize = getExtent (sizeOf treap)
       sumSets = sum (snd <$> sorted)
-      eq = round treapSize == round sumSets
   in assertApproxEquals treapSize sumSets
 
 checkItemAt :: TreapTestData -> Result

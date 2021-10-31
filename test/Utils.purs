@@ -27,7 +27,7 @@ passed :: forall a. CheckResult a -> Boolean
 passed (EqCheck b _ _) = b
 
 axJs :: String -> Number -> AxisJson
-axJs k s = { key: k, width: s }
+axJs k s = { key: k, extent: s }
 
 checkEntry :: String -> Maybe (AxisEntry String) -> CheckResult String
 checkEntry s (Just (AxEntry k _))= EqCheck (k == s) k s
@@ -38,14 +38,14 @@ ce s e = AxEntry s (AxSize e 1)
 
 isSorted :: forall a. Ord a => List a -> Boolean
 isSorted Nil = true
-isSorted (a:Nil) = true
+isSorted (_:Nil) = true
 isSorted (x:y:xs) = x <= y && isSorted (y:xs)
 
 mkTestTreap :: Int -> List (Tuple String Number) -> AxisTreap String
 mkTestTreap seed pairs = mkAxisFromList seed $ uncurry axJs <$> pairs
 
 uniqueKeys :: List (Tuple String Number) -> List (Tuple String Number)
-uniqueKeys = nubBy $ fst >>> flip ((==) <<< fst)
+uniqueKeys = nubBy $ fst >>> flip ((compare) <<< fst)
 
 keyList :: AxisTreap String -> List String
 keyList t =  (\(AxEntry k _) -> k) <$> fromFoldable t
@@ -58,7 +58,7 @@ assertApproxEquals a b = a ~= b <?> show a <> " !~= " <> show b
 
 mkTreapTestData :: Int -> List (Tuple String Number) -> TreapTestData
 mkTreapTestData n pairs = TD sorted (mkTestTreap n pairs)
-    where sorted = nubBy (==) (sort pairs)
+    where sorted = nubBy compare (sort pairs)
 
 data TreapTestData = TD (List (Tuple String Number)) (AxisTreap String)
 
