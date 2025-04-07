@@ -11,7 +11,7 @@
     "purescript-psa": "^0.7.3",
     "purs-loader": "^3.6.0",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.12"
   },
   "devDependencies": {},
   "scripts": {
